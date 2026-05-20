@@ -73,12 +73,12 @@ C++ supports multiple programming paradigms, allowing developers from different 
 
 #### Built time environment (2.2.1)
 
-The built time environment is the runtime environment of the compiled config file. It provides functions and types whose availability and properties are defined by macro values in the compile time environment of itself (headers usable by the built config file). The goal of built time environment is simple: 
+The built time environment is the runtime environment of the compiled config file. It provides functions and types whose availability and properties are defined by macro values in the compile time environment of itself (headers usable by the built config file). The goal of built time environment is simple:
 
 1. To provide functions to build the target system.
-2. To provide the compile time and runtime environment of the target system. 
+2. To provide the compile time and runtime environment of the target system.
 
-The target system can be another built time system that utilizes the same environment which makes the approach of providing built systems as C++ libraries more scalable. Such hirearchal mangement of the compile and runtime environments can lead to ease in maintaining system requirements specified by software quality management organizations. For example, they may provide macros indicating the weather exceptions, function pointers, naked new/free are allowed, such requirements may change, with some features being restricted and the other allowed, and/or the alternative interface's implementation may as well. 
+The target system can be another built time system that utilizes the same environment which makes the approach of providing built systems as C++ libraries more scalable. Such hirearchal mangement of the compile and runtime environments can lead to ease in maintaining system requirements specified by software quality management organizations. For example, they may provide macros indicating the weather exceptions, function pointers, naked new/free are allowed, such requirements may change, with some features being restricted and the other allowed, and/or the alternative interface's implementation may as well.
 
 
 
@@ -86,7 +86,7 @@ The whole notion of a built time environment basically simplifies the management
 
 #### Compile time environment (2.2.2)
 
-Compile time environment consists of Macros defined in headers. Both the built config file and the system will have different copies of such header files. The built system config will have it supplied by the implementation, while for the target system, the user must specify where the header files are to exist. Furthermore, the built time environment will provide a safe and extensible way of extending both compile time and runtime environment of the target system. Macros specified in the header supplied by the C++ implementation will be used by the built config file to check absence or presence of facilities for the built time environment. Whereas, Macros specified by the headers supplied by the build environment facilities will by the built environment. 
+Compile time environment consists of Macros defined in headers. Both the built config file and the system will have different copies of such header files. The built system config will have it supplied by the implementation, while for the target system, the user must specify where the header files are to exist. Furthermore, the built time environment will provide a safe and extensible way of extending both compile time and runtime environment of the target system. Macros specified in the header supplied by the C++ implementation will be used by the built config file to check absence or presence of facilities for the built time environment. Whereas, Macros specified by the headers supplied by the build environment facilities will by the built environment.
 
 #### Runtime environment (2.2.3)
 
@@ -135,7 +135,6 @@ To manage libraries into hierarchies (among other things) , the built environmen
 ## **Definitions**
 
 1. Source files: Files that the built system is to compile.
-2. sub builds: Sub systems that a build relies on the presence and availability of.
-
-3\. built config file: config files that determine how the  target system is to be built. The proposal in the document requires such config files to be C++ code files.
+2. Sub builds: Sub systems that a build relies on the presence and availability of.
+3. Built config file: config files that determine how the  target system is to be built. The proposal in the document requires such config files to be C++ code files.
 
