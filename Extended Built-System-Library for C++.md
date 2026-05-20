@@ -77,8 +77,9 @@ The built time environment is the runtime environment of the compiled config fil
 
 1. To provide functions to build the target system.
 2. To provide the compile time and runtime environment of the target system.
+3. To allow for dependencies between multiple external symbols to be tracked.
 
-The target system can be another built time system that utilizes the same environment which makes the approach of providing built systems as C++ libraries more scalable. Such hirearchal mangement of the compile and runtime environments can lead to ease in maintaining system requirements specified by software quality management organizations. For example, they may provide macros indicating the weather exceptions, function pointers, naked new/free are allowed, such requirements may change, with some features being restricted and the other allowed, and/or the alternative interface's implementation may as well.
+The target system can be another built time system that utilizes the same environment which makes the approach of providing built systems as C++ libraries more scalable. Such hierarchal management of the compile and runtime environments can lead to ease in maintaining system requirements specified by software quality management organizations. For example, they may provide macros indicating the weather exceptions, function pointers, naked new/free are allowed, such requirements may change, with some features being restricted and the other allowed, and/or the alternative interface's implementation may as well. The third point isn't one that is commonly done except for a tools like CMake, but it is important to complement quality management with facilities that help avoid issues like circular dependencies which in turn would allow fix issues like deadlocks and livelocks. All three keystones forming a built environment has to be implemented in the manner described by *2.1.2.1*.
 
 
 
