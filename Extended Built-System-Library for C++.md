@@ -2,7 +2,7 @@
 
 ## **Abstract**
 
-This informal document was initially draft at 5/20/2026 and proposes a ***built system interface in C++*** that is to provide a standardized interface to a built system. The proposal first describes the necessity of built systems to be provided to C++ developers as a library and then tries to expand such a built system to incorporate facilities for the creation of a Built, Compilation, and runtime environment for an application.
+This informal document was initially draft at 5/20/2026 and proposes a ***built system interface in C++*** that is to provide a standardized interface to a built system. The proposal first describes the necessity of built systems to be provided to C++ developers as a library and then tries to expand such a built system to incorporate facilities for the creation of a Built, Compilation, and runtime environment for an application. It also tries to justify and specify the use of preprocessor facilities in the specification, utilization, and implementation of such an interface.
 
 ## **Introduction (1)**
 
@@ -22,7 +22,7 @@ type of compiled library or into an executable.
 
 #### 1 (1.2.1)
 
-1. Current built systems complicate simple automations at a large scale by over abstracting sub builds and by not keeping simple things simple. A great example of this is CMake, where each parameter to a simple build operation containing a few files require you to set certain symbols to certain values, including values that describe the pathnames of the source files in the project. This is an obvious issues since Such issues complicate automations and makes the every CMake config file be very fragile to mistakes and misconfiguration. To make it worse, These facilities don't follow a class hierarchy, hence its harder to relate them or to use them together. CMake also lacks features that help define invariants for these facilities in ways that programmers already understand through experience in languages like C++. One might even speculate that some complexities as a conspiracy to lure large companies into paid CMake training sessions.
+1. Current built systems complicate simple automations at a large scale by over abstracting sub builds and by not keeping simple things simple. A great example of this is CMake, where each parameter to a simple build operation containing a few files require you to set certain symbols to certain values, including values that describe the pathnames of the source files in the  target system. This is an obvious issues since Such issues complicate automations and makes the every CMake config file be very fragile to mistakes and misconfiguration. To make it worse, These facilities don't follow a class hierarchy, hence its harder to relate them or to use them together. CMake also lacks features that help define invariants for these facilities in ways that programmers already understand through experience in languages like C++. One might even speculate that some complexities as a conspiracy to lure large companies into paid CMake training sessions.
 
 #### 2 (1.2.2)
 
@@ -69,6 +69,53 @@ A compiled-built file written in the C++ programming language would be faster to
 
 C++ supports multiple programming paradigms, allowing developers from different backgrounds to be able to scale projects easily with the flexibility of the level provided by C++.
 
+### Extensions to the current notion of built systems (2.2)
+
+#### Built time environment (2.2.1)
+
+The built time environment is the runtime environment of the compiled config file. It provides functions and types whose availability and properties are defined by macro values in the compile time environment of itself (headers usable by the built config file). The goal of built time environment is simple: 
+
+1. To provide functions to build the target system.
+2. To provide the compile time and runtime environment of the target system. 
+
+The target system can be another built time system that utilizes the same environment which makes the approach of providing built systems as C++ libraries more scalable. Such hirearchal mangement of the compile and runtime environments can lead to ease in maintaining system requirements specified by software quality management organizations. For example, they may provide macros indicating the weather exceptions, function pointers, naked new/free are allowed, such requirements may change, with some features being restricted and the other allowed, and/or the alternative interface's implementation may as well. 
+
+
+
+The whole notion of a built time environment basically simplifies the management of libraries into hierarchies, making quality management simplified. This as mentioned previously has enourmiss advantages in quality management and scalability.
+
+#### Compile time environment (2.2.2)
+
+Compile time environment consists of Macros defined in headers. Both the built config file and the system will have different copies of such header files. The built system config will have it supplied by the implementation, while for the target system, the user must specify where the header files are to exist. Furthermore, the built time environment will provide a safe and extensible way of extending both compile time and runtime environment of the target system. Macros specified in the header supplied by the C++ implementation will be used by the built config file to check absence or presence of facilities for the built time environment. Whereas, Macros specified by the headers supplied by the build environment facilities will by the built environment. 
+
+#### Runtime environment (2.2.3)
+
+The runtime environment is the runtime environment of the target project, specified by the built time environment.
+
+
+
+
+
+#### Point to wrap the notion up (2.3)
+
+
+
+To manage libraries into hierarchies (among other things) , the built environment will include a function to allow for the inclusion of both header files and object files provided by the implementation to it to the target project, unless if some of any file require appropriate privileges that the target project doesn't have.
+
+
+
+
+
+## **Proposed interface (3)**
+
+
+
+
+
+
+
+## **Sample implementation (4)**
+
 
 
 
@@ -89,5 +136,6 @@ C++ supports multiple programming paradigms, allowing developers from different 
 
 1. Source files: Files that the built system is to compile.
 2. sub builds: Sub systems that a build relies on the presence and availability of.
-3. built config file: config files that determine how the project is to be built. The proposal in the document requires such config files to be C++ code files.
+
+3\. built config file: config files that determine how the  target system is to be built. The proposal in the document requires such config files to be C++ code files.
 
