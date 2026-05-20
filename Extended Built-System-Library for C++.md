@@ -89,6 +89,5 @@ C++ supports multiple programming paradigms, allowing developers from different 
 
 1. Source files: Files that the built system is to compile.
 2. sub builds: Sub systems that a build relies on the presence and availability of.
-
-3\. built config file: config files that determine how the project is to be built. The proposal in the document requires such config files to be C++ code files.
+3. built config file: config files that determine how the project is to be built. The proposal in the document requires such config files to be C++ code files.
 
