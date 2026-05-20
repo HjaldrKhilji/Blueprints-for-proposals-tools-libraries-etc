@@ -39,22 +39,35 @@ type of compiled library or into an executable.
 
 ### Fixes to all the issues in current built systems (2.1)
 
-#### For issues in described in *1.2.1* (2.1.2)
+#### For issues in described in *1.2.1* (2.1.1)
+
+##### Issue 1 (2.1.1.1)
+
+The fix to not over abstracting and to keep simple things simple is to provide a standard minimal C++ interface where the availability of any advanced features are indicated by macros.  Such an interface would provide functions with well defined pre and post conditions with invariants of the individual of parameter types making such conditions easier to understand and implement. This would effectively minimize fragility by simply exploiting existing C++ features. Such an approach will also allow for the user to create Built, Compilation, and runtime environments for his application, make it easier for any software quality inspection to inspect the quality of such environments provided for the user's application (more on that later).
+
+#### For issues in described in *1.2.2* (2.1.2)
 
 ##### Issue 1 (2.1.2.1):
 
-1. The fix to not over abstracting and to keep simple things simple is to provide a standard minimal C++ interface where the availability of any advanced features are indicated by macros.  Such an interface would provide functions with well defined pre and post conditions with invariants of the individual of parameter types making such conditions easier to understand and implement. This would effectively minimize fragility by simply exploiting existing C++ features. Such an approach will also allow for the user to create Built, Compilation, and runtime environments for his application, make it easier for any software quality inspection to inspect the quality of such environments provided for the user's application (more on that later).
+By providing a standard interface that is both minimal in that it allows for manual fine tuning while also providing defaults too  that are to be used if such manual fine tuning is not desired, the built system can be easily extended with support of external tools providing as C++ libraries or as executables invoked by the built config file. Furthermore such minimal interfaces will beget the idea of a built time environment, such built time environment will be the runtime environment provided for the compiled config C++ built file. The built time environment would be provided by linking the functions whose availability by the macros provided by the compile time environment. Certain functions must exist in hosted implementations, or if the proposal were to  be ready for some other standard's committee, say some future Posix standard supporting C++ then a Posix compliant implementation that indicates support C++.
 
 ##### Issue 2 (2.1.2.2):
 
-1. By providing a standard interface that is both minimal in that it allows for manual fine tuning while also providing defaults too  that are to be used if such manual fine tuning is not desired, the built system can be easily extended with support of external tools providing as C++ libraries or as executables invoked by the built config file. Furthermore such minimal interfaces will beget the idea of a built time environment, such built time environment will be the runtime environment provided for the compiled config C++ built file. The built time environment would be provided by linking the functions whose availability by the macros provided by the compile time environment. Certain functions must exist in hosted implementations, or if the proposal were to  be ready for some other standard's committee, say some future Posix standard supporting C++ then a Posix compliant implementation that indicates support C++.
-2. Such an interface can enforce the implementation to support probing the compiler for information, bypassing the need of doing so using the terminal through unportable means. Such probing must be implemented behind standard interfaces and the availability of such functions can also be indicated by macros, though those functions that are mandated, must have a macro specifying them as such.
-3. The fix to this problem is the same as the first, that is to provide the ability to do manual fine tuning while providing defaults too that are to be used if such fine tuning is not desired.
+Such an interface can enforce the implementation to support probing the compiler for information, bypassing the need of doing so using the terminal through unportable means. Such probing must be implemented behind standard interfaces and the availability of such functions can also be indicated by macros, though those functions that are mandated, must have a macro specifying them as such.
 
-##### Issue 1 (2.1.2.3):
+##### Issue 3 (2.1.2.3):
 
-1. A compiled-built file in the C++ programming language would be faster to execute on many instances than an interpreted one.
-2. 
+The fix to this problem is the same as the first, that is to provide the ability to do manual fine tuning while providing defaults too that are to be used if such fine tuning is not desired.
+
+#### For issues in described in *1.2.3* (2.1.3)
+
+##### Issue 1 (2.1.3.1):
+
+A compiled-built file written in the C++ programming language would be faster to execute in many instances than an interpreted one would be to be to execute on multiple instances. This matter, since this means CMake scales poorer for performance, since each CMake file for a subsystem needs to be reinterpreted again and again for every built.
+
+##### Issue 2 (2.1.3.2):
+
+C++ supports multiple programming paradigms, allowing developers from different backgrounds to be able to scale projects easily with the flexibility of the level provided by C++.
 
 
 
