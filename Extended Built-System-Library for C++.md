@@ -87,11 +87,17 @@ The whole notion of a built time environment basically simplifies the management
 
 #### Compile time environment (2.2.2)
 
-Compile time environment consists of Macros defined in headers. Both the built config file and the system will have different copies of such header files. The built system config will have it supplied by the implementation, while for the target system, the user must specify where the header files are to exist. Furthermore, the built time environment will provide a safe and extensible way of extending both compile time and runtime environment of the target system. Macros specified in the header supplied by the C++ implementation will be used by the built config file to check absence or presence of facilities for the built time environment. Whereas, Macros specified by the headers supplied by the build environment facilities will by the built environment.
+Compile time environment consists of Macros defined in headers. The justification of Macros is that to have code that the compiler only optionally needs, you will need macros. A fix to the possibility that a macro can be mistakenly used to substitute a part of your code is to either adhere to a proper naming convention or for the built system to supply headers that undefine macros, such headers are to be included after all such use cases of the respective macros have been done, such headers will be have the same name as the header containing the respect macro, except with an additional prefix or suffix. Both the built config file and the system will have different copies of such header files. The built system config will have it supplied by the implementation, while for the target system, the user must specify where the header files are to exist. Furthermore, the built time environment will provide a safe and extensible way of extending both compile time and runtime environment of the target system. Macros specified in the header supplied by the C++ implementation will be used by the built config file to check absence or presence of facilities for the built time environment. Whereas, Macros specified by the headers supplied by the build environment facilities will by the built environment.
+
+
+
+An non-recommended alternative to using macros and preprocessor facilities is to completely rely on stable function able to do many tasks that previously may have required many functions and Constexpr functions displaying what options are supporting by such a function. For example, new/delete, could be replaced by simply another interface and the usage of which is to be indicated by the constexpr function. However, if the change in usage require changes in parameter types then somewhere along the line header files are unavoidable. which means that compile time environment wont be able to indicate change in code-enforced invariants unless preprocessor facilities are used.
 
 #### Runtime environment (2.2.3)
 
 The runtime environment is the runtime environment of the target project, specified by the built time environment.
+
+
 
 
 
