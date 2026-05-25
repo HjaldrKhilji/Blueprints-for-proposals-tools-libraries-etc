@@ -2,7 +2,7 @@
 
 ## **Abstract**
 
-This informal document was initially draft at 5/20/2026 and proposes a ***built system interface in C/C++*** that is to provide a standardized interface to a built system. The proposal first describes the necessity of built systems to be provided to C/C++ developers as a library and then tries to expand such a built system to incorporate facilities for the creation of a Built, Compilation, and runtime environment for an application. It also tries to justify and specify the use of preprocessor facilities in the specification, utilization, and implementation of such an interface.
+This informal document was initially draft at 5/20/2026 and proposes a ***built system interface in C/C++*** that is to provide a standardized interface to a built system. The proposal first describes the necessity of built systems to be provided to C/C++ developers as a library and then tries to expand such a built system to incorporate facilities for the creation of a Built, Compilation, and runtime environment for an application. It also tries to justify and specify the use of preprocessor facilities in the specification, utilization, and implementation of such an interface. It shall be noted that the goal of the document is to be general and not to rely on the current functionality of C/C++, the reason for such is (excluding the fact its a informative informal document) that the document is meant to be the first mention of this potentially useful idea and tries to  be future proof in many ways.
 
 ## **Introduction (1)**
 
@@ -169,25 +169,30 @@ print\_line\_file();
 
 the format is required to be: *filename line\_number newline*
 
-The implementation of such a functionality would be for there to be a new file creating on the fly with a function:
+The implementation of such a functionality would be either:
 
-print\_line\_file(){
+1. In C++ to use std::source\_location (but that might make the whole function obsolete).
+2. In C for there to be a new file creating on the fly with a function:
 
-static unsigned int instance\_of\_call=0;
+&#x09;print\_line\_file(){
 
-std::println/printf("*filename\_of\_the\_file\_to\_be\_linked\_to*");
+&#x09;static unsigned int instance\_of\_call=0;
 
-/\*
+&#x09;std::println/printf("*filename\_of\_the\_file\_to\_be\_linked\_to*");
 
-Code that reads file until it encounters *instance\_of\_call* number of calls to
+&#x09;/\*
 
-print\_line\_file() and then prints the current line number.
+&#x09;Code that reads file until it encounters *instance\_of\_call* number of calls to
 
-\*/
+&#x09;print\_line\_file() and then prints the current line number.
 
-//this of course is an implementation that is very inefficient but it is to just give a conceptual view.
+&#x09;\*/
 
-}
+&#x09;//this of course is an implementation that is very inefficient but it is to just give a conceptual view.
+
+&#x09;}
+
+The implementation of usch an option is not needed in C++ since it would only act as synonym to std::source\_location.
 
 };
 
@@ -217,7 +222,7 @@ print\_dependency\_file\_names, // in the case of C++, if the file is a module (
 
 
 
-print\_individual\_dependency\_mappings, // The mapping of each symbol used to every *filename*. After print\_dependency\_file\_names prints a dependency, print\_individual\_dependency\_mappings prints the symbols used that are found in that dependency in a comma-separated list that is terminated by a newline. function dependencies have an escape character appended to there end and any possible "/" is escaped into "//". Such escaping will never happen unless a future standard allows for "/" to be in symbol names. 
+print\_individual\_dependency\_mappings, // The mapping of each symbol used to every *filename*. After print\_dependency\_file\_names prints a dependency, print\_individual\_dependency\_mappings prints the symbols used that are found in that dependency in a comma-separated list that is terminated by a newline. function dependencies have an escape character appended to there end and any possible "/" is escaped into "//". Such escaping will never happen unless a future standard allows for "/" to be in symbol names.
 
 throw\_circular\_dependency\_mappings\_for\_headers, //only in effect if throw\_circular\_dependency\_mappings is defined.
 
