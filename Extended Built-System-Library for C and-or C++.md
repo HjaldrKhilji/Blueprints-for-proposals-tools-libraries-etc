@@ -49,7 +49,7 @@ The fix to not over abstracting and to keep simple things simple is to provide a
 
 ##### Issue 1 (2.1.2.1):
 
-By providing a standard interface that is both minimal in that it allows for manual fine tuning while also providing defaults too  that are to be used if such manual fine tuning is not desired, the built system can be easily extended with support of external tools providing as C/C++ libraries or as executables invoked by the built config file. Furthermore such minimal interfaces will beget the idea of a built time environment, such built time environment will be the runtime environment provided for the compiled config C/C++ built file. The built time environment would be provided by linking the functions whose availability by the macros provided by the compile time environment. Certain functions must exist in hosted implementations, or if the proposal were to  be ready for some other standard's committee, say some future Posix standard supporting C/C++ then a Posix compliant implementation that indicates support C/C++.
+By providing a standard interface that is both minimal in that it allows for manual fine tuning while also providing defaults too  that are to be used if such manual fine tuning is not desired, the built system can be easily extended with support of external tools providing as C/C++ libraries or as executables invoked by the built config file. Furthermore such minimal interfaces will beget the idea of a built time environment, such built time environment will be the runtime environment provided for the compiled config C/C++ built file. The built time environment would be provided by linking the functions whose availability by the macros provided by the compile time environment.
 
 ##### Issue 2 (2.1.2.2):
 
@@ -141,7 +141,7 @@ void set(std::vector<Enum\_dependency\_check\_types> dependency\_tracking\_flags
 
 };
 
-Path defines an absolute path if the namespace variable
+*Path* defines an absolute path if the object std::Base\_path/Base\_path has no elements, but if it has, it will check all of those paths to find the path defined by *Path* and choose the first one found.
 
 ***C programs can define a "factory function" to compensate for the lack of constructors. something similar can be done to set() member function.***
 
