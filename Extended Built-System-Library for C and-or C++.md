@@ -1,8 +1,8 @@
-# **TITLE: Extended Built-System-Library Interface for C++**
+# **TITLE: Extended Built-System-Library Interface for C/C++**
 
 ## **Abstract**
 
-This informal document was initially draft at 5/20/2026 and proposes a ***built system interface in C++*** that is to provide a standardized interface to a built system. The proposal first describes the necessity of built systems to be provided to C++ developers as a library and then tries to expand such a built system to incorporate facilities for the creation of a Built, Compilation, and runtime environment for an application. It also tries to justify and specify the use of preprocessor facilities in the specification, utilization, and implementation of such an interface.
+This informal document was initially draft at 5/20/2026 and proposes a ***built system interface in C/C++*** that is to provide a standardized interface to a built system. The proposal first describes the necessity of built systems to be provided to C/C++ developers as a library and then tries to expand such a built system to incorporate facilities for the creation of a Built, Compilation, and runtime environment for an application. It also tries to justify and specify the use of preprocessor facilities in the specification, utilization, and implementation of such an interface.
 
 ## **Introduction (1)**
 
@@ -22,7 +22,7 @@ type of compiled library or into an executable.
 
 #### 1 (1.2.1)
 
-1. Current built systems complicate simple automations at a large scale by over abstracting sub builds and by not keeping simple things simple. A great example of this is CMake, where each parameter to a simple build operation containing a few files require you to set certain symbols to certain values, including values that describe the pathnames of the source files in the  target system. This is an obvious issues since Such issues complicate automations and makes the every CMake config file be very fragile to mistakes and misconfiguration. To make it worse, These facilities don't follow a class hierarchy, hence its harder to relate them or to use them together. CMake also lacks features that help define invariants for these facilities in ways that programmers already understand through experience in languages like C++. One might even speculate that some complexities as a conspiracy to lure large companies into paid CMake training sessions.
+1. Current built systems complicate simple automations at a large scale by over abstracting sub builds and by not keeping simple things simple. A great example of this is CMake, where each parameter to a simple build operation containing a few files require you to set certain symbols to certain values, including values that describe the pathnames of the source files in the  target system. This is an obvious issues since Such issues complicate automations and makes the every CMake config file be very fragile to mistakes and misconfiguration. To make it worse, These facilities don't follow a class hierarchy, hence its harder to relate them or to use them together. CMake also lacks features that help define invariants for these facilities in ways that programmers already understand through experience in languages like C/C++. One might even speculate that some complexities as a conspiracy to lure large companies into paid CMake training sessions.
 
 #### 2 (1.2.2)
 
@@ -43,13 +43,13 @@ type of compiled library or into an executable.
 
 ##### Issue 1 (2.1.1.1)
 
-The fix to not over abstracting and to keep simple things simple is to provide a standard minimal C++ interface where the availability of any advanced features are indicated by macros.  Such an interface would provide functions with well defined pre and post conditions with invariants of the individual of parameter types making such conditions easier to understand and implement. This would effectively minimize fragility by simply exploiting existing C++ features. Such an approach will also allow for the user to create Built, Compilation, and runtime environments for his application, make it easier for any software quality inspection to inspect the quality of such environments provided for the user's application (more on that later).
+The fix to not over abstracting and to keep simple things simple is to provide a standard minimal C/C++ interface where the availability of any advanced features are indicated by macros.  Such an interface would provide functions with well defined pre and post conditions with invariants of the individual of parameter types making such conditions easier to understand and implement. This would effectively minimize fragility by simply exploiting existing C/C++ features. Such an approach will also allow for the user to create Built, Compilation, and runtime environments for his application, make it easier for any software quality inspection to inspect the quality of such environments provided for the user's application (more on that later).
 
 #### For issues in described in *1.2.2* (2.1.2)
 
 ##### Issue 1 (2.1.2.1):
 
-By providing a standard interface that is both minimal in that it allows for manual fine tuning while also providing defaults too  that are to be used if such manual fine tuning is not desired, the built system can be easily extended with support of external tools providing as C++ libraries or as executables invoked by the built config file. Furthermore such minimal interfaces will beget the idea of a built time environment, such built time environment will be the runtime environment provided for the compiled config C++ built file. The built time environment would be provided by linking the functions whose availability by the macros provided by the compile time environment. Certain functions must exist in hosted implementations, or if the proposal were to  be ready for some other standard's committee, say some future Posix standard supporting C++ then a Posix compliant implementation that indicates support C++.
+By providing a standard interface that is both minimal in that it allows for manual fine tuning while also providing defaults too  that are to be used if such manual fine tuning is not desired, the built system can be easily extended with support of external tools providing as C/C++ libraries or as executables invoked by the built config file. Furthermore such minimal interfaces will beget the idea of a built time environment, such built time environment will be the runtime environment provided for the compiled config C/C++ built file. The built time environment would be provided by linking the functions whose availability by the macros provided by the compile time environment. Certain functions must exist in hosted implementations, or if the proposal were to  be ready for some other standard's committee, say some future Posix standard supporting C/C++ then a Posix compliant implementation that indicates support C/C++.
 
 ##### Issue 2 (2.1.2.2):
 
@@ -63,11 +63,11 @@ The fix to this problem is the same as the first, that is to provide the ability
 
 ##### Issue 1 (2.1.3.1):
 
-A compiled-built file written in the C++ programming language would be faster to execute in many instances than an interpreted one would be to be to execute on multiple instances. This matter, since this means CMake scales poorer for performance, since each CMake file for a subsystem needs to be reinterpreted again and again for every built.
+A compiled-built file written in the C/C++ programming language would be faster to execute in many instances than an interpreted one would be to be to execute on multiple instances. This matter, since this means CMake scales poorer for performance, since each CMake file for a subsystem needs to be reinterpreted again and again for every built.
 
 ##### Issue 2 (2.1.3.2):
 
-C++ supports multiple programming paradigms, allowing developers from different backgrounds to be able to scale projects easily with the flexibility of the level provided by C++.
+C/C++ supports multiple programming paradigms, allowing developers from different backgrounds to be able to scale projects easily with the flexibility of the level provided by C/C++.
 
 ### Extensions to the current notion of built systems (2.2)
 
@@ -79,7 +79,7 @@ The built time environment is the runtime environment of the compiled config fil
 2. To provide the compile time and runtime environment of the target system.
 3. To allow for dependencies between multiple external symbols to be tracked.
 
-The target system can be another built time system that utilizes the same environment which makes the approach of providing built systems as C++ libraries more scalable. Such hierarchal management of the compile and runtime environments can lead to ease in maintaining system requirements specified by software quality management organizations. For example, they may provide macros indicating the weather exceptions, function pointers, naked new/free are allowed, such requirements may change, with some features being restricted and the other allowed, and/or the alternative interface's implementation may as well. The third point isn't one that is commonly done except for a tools like CMake, but it is important to complement quality management with facilities that help avoid issues like circular dependencies which in turn would allow fix issues like deadlocks and livelocks. All three keystones forming a built environment has to be implemented in the manner described by *2.1.2.1*.
+The target system can be another built time system that utilizes the same environment which makes the approach of providing built systems as C/C++ libraries more scalable. Such hierarchal management of the compile and runtime environments can lead to ease in maintaining system requirements specified by software quality management organizations. For example, they may provide macros indicating the weather exceptions, function pointers, naked new/free are allowed, such requirements may change, with some features being restricted and the other allowed, and/or the alternative interface's implementation may as well. The third point isn't one that is commonly done except for a tools like CMake, but it is important to complement quality management with facilities that help avoid issues like circular dependencies which in turn would allow fix issues like deadlocks and livelocks. All three keystones forming a built environment has to be implemented in the manner described by *2.1.2.1*.
 
 
 
@@ -87,7 +87,7 @@ The whole notion of a built time environment basically simplifies the management
 
 #### Compile time environment (2.2.2)
 
-Compile time environment consists of Macros defined in headers. The justification of Macros is that to have code that the compiler only optionally needs, you will need macros. A fix to the possibility that a macro can be mistakenly used to substitute a part of your code is to either adhere to a proper naming convention or for the built system to supply headers that undefine macros, such headers are to be included after all such use cases of the respective macros have been done, such headers will be have the same name as the header containing the respect macro, except with an additional prefix or suffix. Both the built config file and the system will have different copies of such header files. The built system config will have it supplied by the implementation, while for the target system, the user must specify where the header files are to exist. Furthermore, the built time environment will provide a safe and extensible way of extending both compile time and runtime environment of the target system. Macros specified in the header supplied by the C++ implementation will be used by the built config file to check absence or presence of facilities for the built time environment. Whereas, Macros specified by the headers supplied by the build environment facilities will by the built environment.
+Compile time environment consists of Macros defined in headers. The justification of Macros is that to have code that the compiler only optionally needs, you will need macros. A fix to the possibility that a macro can be mistakenly used to substitute a part of your code is to either adhere to a proper naming convention or for the built system to supply headers that undefine macros, such headers are to be included after all such use cases of the respective macros have been done, such headers will be have the same name as the header containing the respect macro, except with an additional prefix or suffix. Both the built config file and the system will have different copies of such header files. The built system config will have it supplied by the implementation, while for the target system, the user must specify where the header files are to exist. Furthermore, the built time environment will provide a safe and extensible way of extending both compile time and runtime environment of the target system. Macros specified in the header supplied by the C/C++ implementation will be used by the built config file to check absence or presence of facilities for the built time environment. Whereas, Macros specified by the headers supplied by the build environment facilities will by the built environment.
 
 
 
@@ -111,13 +111,107 @@ To manage libraries into hierarchies (among other things) , the built environmen
 
 
 
+To start The whole process of building, one will have to invoke a compiler with an implementation defined name from the shell for the starting build file of the whole target, but it should be noted that such an action should only be done per the compilation of a target.
+
+
+
 
 
 ## **Proposed interface (3)**
 
 
 
+### Introduction (2.3)
 
+
+
+The first thing one would want to define an interface for is a function to build a single file and return the handle to what it builded it into. Such a function's name would be:
+
+Built\_file\_handle build\_file(Built\_file\_config)
+
+its availability indicated by BUILD\_FILE\_AVAIL\_C\_CPP\_BUILD macro. BUILD\_FILE\_AVAIL\_C\_CPP\_BUILD has to be set to 2024\_05L. The
+
+Built\_file\_config is defined as:
+
+struct Built\_file\_config{
+
+/\*implementation defined representation\*/
+
+Built\_file\_config(std::string path, Enum\_type\_of\_compilation, unsigned long Enum\_optimization\_level, std::vector<Enum\_debug> debug\_built\_types,  std::vector<Enum\_show\_dependencies> dependency\_tracking\_flags, std::vector<implementation\_defined\_compiler\_flags> impl\_defined\_flags);
+
+void set(std::vector<Enum\_dependency\_check\_types> dependency\_tracking\_flags);
+
+};
+
+Path defines an absolute path if the namespace variable
+
+***C programs can define a "factory function" to compensate for the lack of constructors. something similar can be done to set() member function.***
+
+The availability of optional/mandatory facility that I will describe, define it as -1 or undefined to indicate no compile time or runtime support, define it as 0 to indicate that compile time support and that it may be supported at runtime (you have to do runtime checks using standard Posix/C++ functions, and greater than 0 to define that the facility has both compile time and runtime support. If the value of a macro is 0 then all the compile time support promised is for the application to just compile when contains code that uses the application, but how the interface of such facilities act is implementation defined. For mandatory features, it is justified to skip checking, where as in all the other cases, you must do otherwise. For C++, there must be a proposal for standard functions to check for the availability  of features of facilities at runtime since C++ lacks them.
+
+
+
+#### Enum\_type\_of\_compilation Type Definition (2.3.1)Enum class Enum\_type\_of\_compilation{
+
+show\_function\_where\_leak;//mandatory for confirming implementations. Will provide a compile time error if it suspects a chance of leak in a function (unconditional freeing of the pointer does not occur). Such a chance will be found through checking if a pointer that is assigned a value through new/delete/any C dynamic memory function or any function that returns "return (new/delete/other code)". Such a compile time error must provide the function name and the absolute file path of the file that it occurred.
+
+is\_mem\_freed;//optional for confirming implementations. Will provide a function:
+
+bool is\_mem\_free(void \*ptr);
+
+//that check weather a memory pointed by a pointer is freed or not. Such a facility will require that the user allocates dynamic momory through new/delete/and other such C standard functions only, and that the implementation overrides such functions to also register the pointer, and remove such registries for pointers if the pointer is freed.
+
+show\_file\_line\_and\_file\_where\_needed; // provides a function to print the file and line where that function is invoked:
+
+print\_line\_file();
+
+the format is required to be: *filename line\_number newline*
+
+The implementation of such a functionality would be for there to be a new file creating on the fly with a function:
+
+print\_line\_file(){
+
+static unsigned int instance\_of\_call=0;
+
+std::println/printf("*filename\_of\_the\_file\_to\_be\_linked\_to*");
+
+/\*
+
+Code that reads file until it encounters *instance\_of\_call* number of calls to
+
+print\_line\_file() and then prints the current line number.
+
+\*/
+
+//this of course is an implementation that is very inefficient but it is to just give a conceptual view.
+
+}
+
+};
+
+&#x20;
+
+
+
+#### Enum\_optimization\_level (2.3.1)
+
+Enum\_optimization\_level is an argument that as it increases, the build system tries to optimize for performance at the expense of space as the value goes up.
+
+The limit for Enum\_optimization\_level is defined by the variable/macro Enum\_optimization\_level\_limit/ENUM\_OPTIMIZATION\_LEVEL\_LIMIT.
+
+
+
+#### The dependency\_tracking\_flags (2.3.2)
+
+As shown by the definition of the type is a std::initializer\_list
+
+&#x20;of Enum\_show\_dependencies. which is defined as:
+
+enum class Enum\_show\_dependencies{
+
+print\_dependency\_file\_names, // in the case of C++, if the file is a module (not a header file), then the filename would be printed as *filename*/*module\_name* , any potential "/" in either filename or module\_name would be turned into "//". For header files its just *filename. Filename* is to be the absolute path of the file in question. After each dependency getting printed, there has to be a newline.
+
+};
 
 
 
@@ -143,5 +237,5 @@ To manage libraries into hierarchies (among other things) , the built environmen
 
 1. Source files: Files that the built system is to compile.
 2. Sub builds: Sub systems that a build relies on the presence and availability of.
-3. Built config file: config files that determine how the  target system is to be built. The proposal in the document requires such config files to be C++ code files.
+3. Built config file: config files that determine how the  target system is to be built. The proposal in the document requires such config files to be C/C++ files.
 
