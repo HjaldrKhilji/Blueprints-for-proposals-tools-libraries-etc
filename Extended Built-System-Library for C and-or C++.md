@@ -129,8 +129,6 @@ The first thing one would want to define an interface for is a function to build
 
 Built\_file\_handle build\_file(Built\_file\_config)
 
-its availability indicated by BUILD\_FILE\_AVAIL\_C\_CPP\_BUILD macro. BUILD\_FILE\_AVAIL\_C\_CPP\_BUILD has to be set to 2024\_05L. The
-
 Built\_file\_config is defined as:
 
 struct Built\_file\_config{
@@ -147,7 +145,11 @@ Path defines an absolute path if the namespace variable
 
 ***C programs can define a "factory function" to compensate for the lack of constructors. something similar can be done to set() member function.***
 
-The availability of optional/mandatory facility that I will describe, define it as -1 or undefined to indicate no compile time or runtime support, define it as 0 to indicate that compile time support and that it may be supported at runtime (you have to do runtime checks using standard Posix/C++ functions, and greater than 0 to define that the facility has both compile time and runtime support. If the value of a macro is 0 then all the compile time support promised is for the application to just compile when contains code that uses the application, but how the interface of such facilities act is implementation defined. For mandatory features, it is justified to skip checking, where as in all the other cases, you must do otherwise. For C++, there must be a proposal for standard functions to check for the availability  of features of facilities at runtime since C++ lacks them.
+The availability of the function "build\_file", the build\_multiple\_file function (described in ***3.3***), along with all the types required by the definition of Built\_file\_config above, and Built\_file\_config itself are defined by the macro BUILD\_SYSTEM\_AVALABILITY. BUILD\_SYSTEM\_AVALABILITY must be defined with a value greater than 0 for compliance to this proposal.
+
+&#x20;
+
+The availability of optional/mandatory facility that I will describe, define it as -1 or undefined to indicate no compile time or runtime support, define it as 0 to indicate that compile time support and that it may be supported at runtime (you have to do runtime checks using standard Posix/C++ functions, and greater than 0 to define that the facility has both compile time and runtime support. If the value of a macro is 0 then all the compile time support promised is for the application to just compile when contains code that uses the application, but how the interface of such facilities act is implementation defined. For mandatory features, it is justified to skip checking, where as in all the other cases, you must do otherwise. For C++, there must be a proposal for standard functions to check for the availability of facilities at runtime since C++ lacks them.
 
 
 
@@ -246,7 +248,7 @@ The impl\_defined\_flags is a paremeter of type Enum implementation\_defined\_co
 
 
 
-### multi-file built Interface (3.1)
+### multi-file built Interface (3.3)
 
 
 
