@@ -121,7 +121,7 @@ To start The whole process of building, one will have to invoke a compiler with 
 
 
 
-### Primary Interface (3.1)
+### Single file built Interface (3.1)
 
 
 
@@ -151,7 +151,13 @@ The availability of optional/mandatory facility that I will describe, define it 
 
 
 
-### Enum\_type\_of\_compilation Type Definition (3.2)
+### Expanding on Single file built Interface(3.2)
+
+
+
+
+
+#### Enum\_type\_of\_compilation Type Definition (3.2.1)
 
 Enum class Enum\_type\_of\_compilation{
 
@@ -200,7 +206,7 @@ The implementation of usch an option is not needed in C++ since it would only ac
 
 
 
-### Enum\_optimization\_level (2.3)
+#### Enum\_optimization\_level (3.2.2)
 
 Enum\_optimization\_level is an argument that as it increases, the build system tries to optimize for performance at the expense of space as the value goes up.
 
@@ -208,7 +214,7 @@ The limit for Enum\_optimization\_level is defined by the variable/macro Enum\_o
 
 
 
-### The dependency\_tracking\_flags (2.4)
+#### The dependency\_tracking\_flags (3.2.3)
 
 As shown by the definition of the type is an std::initializer\_list
 
@@ -234,9 +240,17 @@ an operation A for a symbol B depends on the operation B of a symbol C while the
 
 };
 
-### The impl\_defined\_flags(2.5)
+#### The impl\_defined\_flags(3.2.4)
 
 The impl\_defined\_flags is a paremeter of type Enum implementation\_defined\_compiler\_flags. implementation\_defined\_compiler\_flags type enumerate just implementation defined flags that a confirming implementation must document if provided.
+
+
+
+### multi-file built Interface (3.1)
+
+
+
+
 
 
 
