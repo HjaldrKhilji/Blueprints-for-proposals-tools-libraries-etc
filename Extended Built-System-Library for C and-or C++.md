@@ -121,7 +121,7 @@ To start The whole process of building, one will have to invoke a compiler with 
 
 
 
-### Introduction (2.3)
+### Primary Interface (3.1)
 
 
 
@@ -137,7 +137,7 @@ struct Built\_file\_config{
 
 /\*implementation defined representation\*/
 
-Built\_file\_config(std::string path, Enum\_type\_of\_compilation, unsigned long Enum\_optimization\_level, std::vector<Enum\_debug> debug\_built\_types,  std::vector<Enum\_show\_dependencies> dependency\_tracking\_flags, std::vector<implementation\_defined\_compiler\_flags> impl\_defined\_flags);
+Built\_file\_config(std::string path, Enum\_type\_of\_compilation, unsigned long Enum\_optimization\_level, std::initializer\_list<Enum\_debug> debug\_built\_types,  std::initializer\_list<Enum\_show\_dependencies> dependency\_tracking\_flags, std::initializer\_list<implementation\_defined\_compiler\_flags> impl\_defined\_flags);
 
 void set(std::vector<Enum\_dependency\_check\_types> dependency\_tracking\_flags);
 
@@ -151,7 +151,9 @@ The availability of optional/mandatory facility that I will describe, define it 
 
 
 
-#### Enum\_type\_of\_compilation Type Definition (2.3.1)Enum class Enum\_type\_of\_compilation{
+### Enum\_type\_of\_compilation Type Definition (3.2)
+
+Enum class Enum\_type\_of\_compilation{
 
 show\_function\_where\_leak;//mandatory for confirming implementations. Will provide a compile time error if it suspects a chance of leak in a function (unconditional freeing of the pointer does not occur). Such a chance will be found through checking if a pointer that is assigned a value through new/delete/any C dynamic memory function or any function that returns "return (new/delete/other code)". Such a compile time error must provide the function name and the absolute file path of the file that it occurred.
 
@@ -193,7 +195,7 @@ print\_line\_file() and then prints the current line number.
 
 
 
-#### Enum\_optimization\_level (2.3.1)
+### Enum\_optimization\_level (2.3)
 
 Enum\_optimization\_level is an argument that as it increases, the build system tries to optimize for performance at the expense of space as the value goes up.
 
@@ -201,27 +203,47 @@ The limit for Enum\_optimization\_level is defined by the variable/macro Enum\_o
 
 
 
-#### The dependency\_tracking\_flags (2.3.2)
+### The dependency\_tracking\_flags (2.4)
 
-As shown by the definition of the type is a std::initializer\_list
+As shown by the definition of the type is an std::initializer\_list
 
 &#x20;of Enum\_show\_dependencies. which is defined as:
 
 enum class Enum\_show\_dependencies{
 
+
+
 print\_dependency\_file\_names, // in the case of C++, if the file is a module (not a header file), then the filename would be printed as *filename*/*module\_name* , any potential "/" in either filename or module\_name would be turned into "//". For header files its just *filename. Filename* is to be the absolute path of the file in question. After each dependency getting printed, there has to be a newline.
+
+
+
+print\_individual\_dependency\_mappings, // The mapping of each symbol used to every *filename*. After print\_dependency\_file\_names prints a dependency, print\_individual\_dependency\_mappings prints the symbols used that are found in that dependency in a comma-separated list that is terminated by a newline. function dependencies have an escape character appended to there end and any possible "/" is escaped into "//". Such escaping will never happen unless a future standard allows for "/" to be in symbol names. 
+
+throw\_circular\_dependency\_mappings\_for\_headers, //only in effect if throw\_circular\_dependency\_mappings is defined.
+
+throw\_circular\_dependency\_mappings, // The mapping of each symbol is checked for circular dependencies, it is defined as:
+
+an operation A for a symbol B depends on the operation B of a symbol C while the same operation B depends on operation A, and vice verse. Such dependency can be anything but namely: C++ initialization/assignment operation that gets messy due to poorly-designed user defined constructors/assignment operations. Such a flag will not check header files to see if such issues exist between header file included and the source file it is included in, unless throw\_circular\_dependency\_mappings\_for\_headers is defined.
+
+
 
 };
 
+### The impl\_defined\_flags(2.5)
 
-
-## **Sample implementation (4)**
-
-
-
+The impl\_defined\_flags is a paremeter of type Enum implementation\_defined\_compiler\_flags. implementation\_defined\_compiler\_flags type enumerate just implementation defined flags that a confirming implementation must document if provided.
 
 
 
+## **Sample implementation Conceptual (4)**
+
+
+
+
+
+
+
+## **Sample implementation Practical (4)**
 
 
 
