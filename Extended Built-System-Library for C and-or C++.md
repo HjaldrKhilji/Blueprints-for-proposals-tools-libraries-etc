@@ -135,9 +135,17 @@ struct Built\_file\_config{
 
 /\*implementation defined representation\*/
 
-Built\_file\_config(std::string path, Enum\_type\_of\_compilation, unsigned long Enum\_optimization\_level, std::initializer\_list<Enum\_debug> debug\_built\_types,  std::initializer\_list<Enum\_show\_dependencies> dependency\_tracking\_flags, std::initializer\_list<implementation\_defined\_compiler\_flags> impl\_defined\_flags);
+Built\_file\_config(std::string path, Enum\_type\_of\_compilation, unsigned long Enum\_optimization\_level, std::initializer\_list<Enum\_debug> debug\_built\_types,  std::initializer\_list<Enum\_show\_dependencies> dependency\_tracking\_flags, 
 
-void set(std::vector<Enum\_dependency\_check\_types> dependency\_tracking\_flags);
+std::initializer\_list<Append\_compile\_runtime\_environment> append\_flags,
+
+std::initializer\_list<implementation\_defined\_compiler\_flags> impl\_defined\_flags);
+
+void set(Enum\_type\_of\_compilation, unsigned long Enum\_optimization\_level, std::initializer\_list<Enum\_debug> debug\_built\_types,  std::initializer\_list<Enum\_show\_dependencies> dependency\_tracking\_flags,
+
+std::initializer\_list<Append\_compile\_runtime\_environment> append\_flags,
+
+std::initializer\_list<implementation\_defined\_compiler\_flags> impl\_defined\_flags);
 
 };
 
@@ -157,27 +165,39 @@ The availability of optional/mandatory facility that I will describe, define it 
 
 
 
+&#x20;
 
 
-#### Enum\_type\_of\_compilation Type Definition (3.2.1)
 
-Enum class Enum\_type\_of\_compilation{
+#### Enum\_optimization\_level (3.2.2)
 
-show\_function\_where\_leak;//mandatory for confirming implementations. Will provide a compile time error if it suspects a chance of leak in a function (unconditional freeing of the pointer does not occur). Such a chance will be found through checking if a pointer that is assigned a value through new/delete/any C dynamic memory function or any function that returns "return (new/delete/other code)". Such a compile time error must provide the function name and the absolute file path of the file that it occurred.
+Enum\_optimization\_level is an argument that as it increases, the build system tries to optimize for performance at the expense of space as the value goes up.
 
-is\_mem\_freed;//optional for confirming implementations. Will provide a function:
+The limit for Enum\_optimization\_level is defined by the variable/macro Enum\_optimization\_level\_limit/ENUM\_OPTIMIZATION\_LEVEL\_LIMIT.
+
+
+
+#### Debug\_built\_types Type Definition (3.2.3)
+
+Enum class **Debug\_built\_types**{
+
+**show\_function\_where\_leak;**//mandatory for confirming implementations. Will provide a compile time error if it suspects a chance of leak in a function (unconditional freeing of the pointer does not occur). Such a chance will be found through checking if a pointer that is assigned a value through new/delete/any C dynamic memory function or any function that returns "return (new/delete/other code)". Such a compile time error must provide the function name and the absolute file path of the file that it occurred.
+
+**is\_mem\_freed;**//optional for confirming implementations. Will provide a function:
 
 bool is\_mem\_free(void \*ptr);
 
 //that check weather a memory pointed by a pointer is freed or not. Such a facility will require that the user allocates dynamic momory through new/delete/and other such C standard functions only, and that the implementation overrides such functions to also register the pointer, and remove such registries for pointers if the pointer is freed.
 
-show\_file\_line\_and\_file\_where\_needed; // provides a function to print the file and line where that function is invoked:
+**show\_file\_line\_and\_file\_where\_needed;** // provides a function to print the file and line where that function is invoked:
 
 print\_line\_file();
 
-the format is required to be: *filename line\_number newline*
+//the format is required to be: *filename line\_number newline*
 
-The implementation of such a functionality would be either:
+//The implementation of such a functionality would be either:
+
+/\*
 
 1. In C++ to use std::source\_location (but that might make the whole function obsolete).
 2. In C for there to be a new file creating on the fly with a function:
@@ -200,23 +220,19 @@ The implementation of such a functionality would be either:
 
 &#x09;}
 
-The implementation of usch an option is not needed in C++ since it would only act as synonym to std::source\_location.
+\*/
+
+//The implementation of usch an option is not needed in C++ since it would only act as synonym to std::source\_location.
+
+//The availability of each facility is confirm by the macro that has the capitalized name of the enumerator representing the facility.
 
 };
 
-&#x20;
 
 
 
-#### Enum\_optimization\_level (3.2.2)
 
-Enum\_optimization\_level is an argument that as it increases, the build system tries to optimize for performance at the expense of space as the value goes up.
-
-The limit for Enum\_optimization\_level is defined by the variable/macro Enum\_optimization\_level\_limit/ENUM\_OPTIMIZATION\_LEVEL\_LIMIT.
-
-
-
-#### The dependency\_tracking\_flags (3.2.3)
+#### The dependency\_tracking\_flags (3.2.4)
 
 As shown by the definition of the type is an std::initializer\_list
 
@@ -242,7 +258,7 @@ an operation A for a symbol B depends on the operation B of a symbol C while the
 
 };
 
-#### The impl\_defined\_flags(3.2.4)
+#### The impl\_defined\_flags(3.2.5)
 
 The impl\_defined\_flags is a paremeter of type Enum implementation\_defined\_compiler\_flags. implementation\_defined\_compiler\_flags type enumerate just implementation defined flags that a confirming implementation must document if provided.
 
