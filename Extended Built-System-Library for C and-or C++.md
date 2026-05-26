@@ -127,15 +127,15 @@ To start The whole process of building, one will have to invoke a compiler with 
 
 The first thing one would want to define an interface for is a function to build a single file and return the handle to what it builded it into. Such a function's name would be:
 
-build\_file\_handle build\_file(build\_file\_config)
+Build\_file\_handle build\_file(Build\_file\_config)
 
-build\_file\_config is defined as:
+Build\_file\_config is defined as:
 
-struct build\_file\_config{
+struct Build\_file\_config{
 
 /\*implementation defined representation\*/
 
-build\_file\_config(std::string path, enum\_type\_of\_compilation, unsigned long enum\_optimization\_level, std::initializer\_list<enum\_debug> debug\_build\_types,  std::initializer\_list<enum\_show\_dependencies> dependency\_tracking\_flags, 
+Build\_file\_config(std::string path, enum\_type\_of\_compilation, unsigned long enum\_optimization\_level, std::initializer\_list<enum\_debug> debug\_build\_types,  std::initializer\_list<enum\_show\_dependencies> dependency\_tracking\_flags, 
 
 std::initializer\_list<Append\_compile\_runtime\_environment> append\_flags,
 
@@ -155,7 +155,7 @@ std::initializer\_list<implementation\_defined\_compiler\_flags> impl\_defined\_
 
 ***C implementations can define a "factory function" to compensate for the lack of constructors. something similar can be done to set() member function. C can also use an pointer rather than std::initializer list.***
 
-The availability of the function "build\_file", the build\_multiple\_file function (described in ***3.3***), along with all the types required by the definition of build\_file\_config above, and build\_file\_config itself are defined by the macro **BUILD\_SYSTEM\_AVALABILITY**. **BUILD\_SYSTEM\_AVALABILITY** must be defined with a value greater than 0 for compliance to this proposal. 
+The availability of the function "build\_file", the build\_multiple\_file function (described in ***3.3***), along with all the types required by the definition of Build\_file\_config above, and Build\_file\_config itself are defined by the macro **BUILD\_SYSTEM\_AVALABILITY**. **BUILD\_SYSTEM\_AVALABILITY** must be defined with a value greater than 0 for compliance to this proposal. 
 
 &#x20;
 
@@ -167,7 +167,7 @@ The availability of optional/mandatory facility that I will describe, define it 
 
 
 
-#### enum\_type\_of\_compilation (3.2.1)
+#### The type enum\_type\_of\_compilation (3.2.1)
 
 
 
@@ -187,15 +187,15 @@ enum class **enum\_type\_of\_compilation**{
 
 
 
-#### enum\_optimization\_level (3.2.2)
+#### The enum\_optimization\_level (3.2.2)
 
-enum\_optimization\_level is an argument that as it increases, the build system tries to optimize for performance at the expense of space as the value goes up.
+enum\_optimization\_level is a paremeter of type unsigned long, that as it increases, the build system tries to optimize for performance at the expense of space as the value goes up.
 
 The limit for enum\_optimization\_levefl is defined by the mandatory variable/macro enum\_optimization\_level\_limit/enum\_OPTIMIZATION\_LEVEL\_LIMIT.
 
 
 
-#### The Debug\_build\_types (3.2.3)
+#### The debug\_build\_types (3.2.3)
 
 The Debug\_build\_types is of type std::initializer\_list<enum\_debug>.
 
@@ -252,7 +252,7 @@ bool is\_mem\_free(void \*ptr);
 
 //The implementation of such an option is not needed in C++ since it would only act as synonym to std::source\_location.
 
-//The availability of each facility is confirm by the macro that has the capitalized name of the enumerator representing the facility.
+//The availability of each facility is confirm by the macro that has the capitalized name of the enumerator representing the facility. When a facility is included.
 
 };
 
@@ -300,8 +300,6 @@ enum class **Append\_compile\_runtime\_environment** {
 
 **Append\_build\_time,** //Appends build environment and the compile time preprocessor data specifying the availability of build time facilities to the target, making it available for use by the target.
 
-
-
 };
 
 
@@ -312,11 +310,25 @@ The impl\_defined\_flags is a parameter of type std::initializer\_list<implement
 
 
 
+#### The Type Build\_file\_handle(3.2.6)
+
+Build\_file\_handle is a type meant to be used as a handle to compiled files that can further allow you to run implementation defined functions on them, or to further compile/link them into other kinds of files using standard functions that will be described further in this document.
 
 
-### multi-file build Interface (3.3)
+
+#### To Wrap It all up(3.2.8)
+
+the availability of functions that any facility relies on, can be verified using the same macro that verifies the availability of the inclusion of such facilities in built time, this rule however only applies if the facilities changes the runtime and compile time environment of the target. **it does not apply to facilities, like the one whose availability indicated by show\_function\_where\_leak in the Enum class enum\_debug since such facilities dont append facilities to the target project.**
 
 
+
+### Multi-file build Interface (3.3)
+
+
+
+
+
+### Other standard functions for further processing Build\_file\_handle (3.4)
 
 
 
