@@ -141,6 +141,8 @@ std::initializer\_list<Append\_compile\_runtime\_environment> append\_flags,
 
 std::initializer\_list<implementation\_defined\_compiler\_flags> impl\_defined\_flags);
 
+
+
 void set(Enum\_type\_of\_compilation, unsigned long Enum\_optimization\_level, std::initializer\_list<Enum\_debug> debug\_built\_types,  std::initializer\_list<Enum\_show\_dependencies> dependency\_tracking\_flags,
 
 std::initializer\_list<Append\_compile\_runtime\_environment> append\_flags,
@@ -153,7 +155,7 @@ std::initializer\_list<implementation\_defined\_compiler\_flags> impl\_defined\_
 
 ***C programs can define a "factory function" to compensate for the lack of constructors. something similar can be done to set() member function.***
 
-The availability of the function "build\_file", the build\_multiple\_file function (described in ***3.3***), along with all the types required by the definition of Built\_file\_config above, and Built\_file\_config itself are defined by the macro BUILD\_SYSTEM\_AVALABILITY. BUILD\_SYSTEM\_AVALABILITY must be defined with a value greater than 0 for compliance to this proposal.
+The availability of the function "build\_file", the build\_multiple\_file function (described in ***3.3***), along with all the types required by the definition of Built\_file\_config above, and Built\_file\_config itself are defined by the macro **BUILD\_SYSTEM\_AVALABILITY**. **BUILD\_SYSTEM\_AVALABILITY** must be defined with a value greater than 0 for compliance to this proposal.
 
 &#x20;
 
@@ -165,7 +167,23 @@ The availability of optional/mandatory facility that I will describe, define it 
 
 
 
-&#x20;
+#### Enum\_type\_of\_compilation (3.2.2)
+
+
+
+Enum class **Enum\_type\_of\_compilation**{
+
+preprocessed, //compile into preprocessed file, if this is specified then all the other flags will be ignored.
+
+object\_file, //compile into object file
+
+executable\_file //compile into executable file 
+
+//all the facilities above are mandatory under the mandatory flag **BUILD\_SYSTEM\_AVALABILITY.**
+
+**/\*Other implementation defined flags whose availability is specified by a macro with the name that is the capitalized name of the corresponding enumerator\*/**
+
+};
 
 
 
@@ -173,23 +191,17 @@ The availability of optional/mandatory facility that I will describe, define it 
 
 Enum\_optimization\_level is an argument that as it increases, the build system tries to optimize for performance at the expense of space as the value goes up.
 
-The limit for Enum\_optimization\_level is defined by the variable/macro Enum\_optimization\_level\_limit/ENUM\_OPTIMIZATION\_LEVEL\_LIMIT.
+The limit for Enum\_optimization\_level is defined by the mandatory variable/macro Enum\_optimization\_level\_limit/ENUM\_OPTIMIZATION\_LEVEL\_LIMIT.
 
 
 
 #### Debug\_built\_types Type Definition (3.2.3)
 
-Enum class **Debug\_built\_types**{
+enum class **Debug\_built\_types**{
 
-**show\_function\_where\_leak;**//mandatory for confirming implementations. Will provide a compile time error if it suspects a chance of leak in a function (unconditional freeing of the pointer does not occur). Such a chance will be found through checking if a pointer that is assigned a value through new/delete/any C dynamic memory function or any function that returns "return (new/delete/other code)". Such a compile time error must provide the function name and the absolute file path of the file that it occurred.
+**show\_function\_where\_leak,**//mandatory for confirming implementations. Will provide a compile time error if it suspects a chance of leak in a function (unconditional freeing of the pointer does not occur). Such a chance will be found through checking if a pointer that is assigned a value through new/delete/any C dynamic memory function or any function that returns "return (new/delete/other code)". Such a compile time error must provide the function name and the absolute file path of the file that it occurred.
 
-**is\_mem\_freed;**//optional for confirming implementations. Will provide a function:
-
-bool is\_mem\_free(void \*ptr);
-
-//that check weather a memory pointed by a pointer is freed or not. Such a facility will require that the user allocates dynamic momory through new/delete/and other such C standard functions only, and that the implementation overrides such functions to also register the pointer, and remove such registries for pointers if the pointer is freed.
-
-**show\_file\_line\_and\_file\_where\_needed;** // provides a function to print the file and line where that function is invoked:
+**show\_file\_line\_and\_file\_where\_needed,** // provides a function to print the file and line where that function is invoked:
 
 print\_line\_file();
 
@@ -222,7 +234,19 @@ print\_line\_file();
 
 \*/
 
-//The implementation of usch an option is not needed in C++ since it would only act as synonym to std::source\_location.
+//all the facilities above are mandatory under the mandatory flag **BUILD\_SYSTEM\_AVALABILITY.**
+
+**is\_mem\_freed,**//optional for confirming implementations. Will provide a function:
+
+bool is\_mem\_free(void \*ptr);
+
+//that check weather a memory pointed by a pointer is freed or not. Such a facility will require that the user allocates dynamic momory through new/delete/and other such C standard functions only, and that the implementation overrides such functions to also register the pointer, and remove such registries for pointers if the pointer is freed.
+
+
+
+***/\*Other implementation defined facilities indicated by additional enumerators\*/***
+
+//The implementation of such an option is not needed in C++ since it would only act as synonym to std::source\_location.
 
 //The availability of each facility is confirm by the macro that has the capitalized name of the enumerator representing the facility.
 
@@ -238,21 +262,27 @@ As shown by the definition of the type is an std::initializer\_list
 
 &#x20;of Enum\_show\_dependencies. which is defined as:
 
-enum class Enum\_show\_dependencies{
+enum class **Enum\_show\_dependencies**{
 
 
 
-print\_dependency\_file\_names, // in the case of C++, if the file is a module (not a header file), then the filename would be printed as *filename*/*module\_name* , any potential "/" in either filename or module\_name would be turned into "//". For header files its just *filename. Filename* is to be the absolute path of the file in question. After each dependency getting printed, there has to be a newline.
+**print\_dependency\_file\_names,** // in the case of C++, if the file is a module (not a header file), then the filename would be printed as *filename*/*module\_name* , any potential "/" in either filename or module\_name would be turned into "//". For header files its just *filename. Filename* is to be the absolute path of the file in question. After each dependency getting printed, there has to be a newline.
 
 
 
-print\_individual\_dependency\_mappings, // The mapping of each symbol used to every *filename*. After print\_dependency\_file\_names prints a dependency, print\_individual\_dependency\_mappings prints the symbols used that are found in that dependency in a comma-separated list that is terminated by a newline. function dependencies have an escape character appended to there end and any possible "/" is escaped into "//". Such escaping will never happen unless a future standard allows for "/" to be in symbol names.
+**print\_individual\_dependency\_mappings,** // The mapping of each symbol used to every *filename*. After print\_dependency\_file\_names prints a dependency, print\_individual\_dependency\_mappings prints the symbols used that are found in that dependency in a comma-separated list that is terminated by a newline. function dependencies have an escape character appended to there end and any possible "/" is escaped into "//". Such escaping will never happen unless a future standard allows for "/" to be in symbol names.
 
-throw\_circular\_dependency\_mappings\_for\_headers, //only in effect if throw\_circular\_dependency\_mappings is defined.
+**throw\_circular\_dependency\_mappings\_for\_headers,** //only in effect if throw\_circular\_dependency\_mappings is defined.
 
-throw\_circular\_dependency\_mappings, // The mapping of each symbol is checked for circular dependencies, it is defined as:
+**throw\_circular\_dependency\_mappings,** // The mapping of each symbol is checked for circular dependencies, it is defined as:
 
 an operation A for a symbol B depends on the operation B of a symbol C while the same operation B depends on operation A, and vice verse. Such dependency can be anything but namely: C++ initialization/assignment operation that gets messy due to poorly-designed user defined constructors/assignment operations. Such a flag will not check header files to see if such issues exist between header file included and the source file it is included in, unless throw\_circular\_dependency\_mappings\_for\_headers is defined.
+
+//all the facilities above are mandatory under the mandatory flag **BUILD\_SYSTEM\_AVALABILITY.**
+
+***/\*Other implementation defined facilities indicated by additional enumerators\*/***
+
+
 
 
 
