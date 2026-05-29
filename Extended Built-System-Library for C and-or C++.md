@@ -135,7 +135,7 @@ struct Build\_file\_config{
 
 /\*implementation defined representation\*/
 
-Build\_file\_config(std::string path, enum\_type\_of\_compilation, unsigned long enum\_optimization\_level, std::initializer\_list<enum\_debug> debug\_build\_types,  std::initializer\_list<enum\_show\_dependencies> dependency\_tracking\_flags, 
+Build\_file\_config(std::string path, enum\_type\_of\_compilation, unsigned long enum\_optimization\_level, std::initializer\_list<enum\_debug> debug\_build\_types,  std::initializer\_list<enum\_show\_dependencies> dependency\_tracking\_flags,
 
 std::initializer\_list<Append\_compile\_runtime\_environment> append\_flags,
 
@@ -155,7 +155,7 @@ std::initializer\_list<implementation\_defined\_compiler\_flags> impl\_defined\_
 
 ***C implementations can define a "factory function" to compensate for the lack of constructors. something similar can be done to set() member function. C can also use an pointer rather than std::initializer list.***
 
-The availability of the function "build\_file", the build\_multiple\_file function (described in ***3.3***), along with all the types required by the definition of Build\_file\_config above, and Build\_file\_config itself are defined by the macro **BUILD\_SYSTEM\_AVALABILITY**. **BUILD\_SYSTEM\_AVALABILITY** must be defined with a value greater than 0 for compliance to this proposal. 
+The availability of the function "build\_file", the build\_multiple\_file function (described in ***3.3***), along with all the types required by the definition of Build\_file\_config above, and Build\_file\_config itself are defined by the macro **BUILD\_SYSTEM\_AVALABILITY**. **BUILD\_SYSTEM\_AVALABILITY** must be defined with a value greater than 0 for compliance to this proposal.
 
 &#x20;
 
@@ -177,7 +177,7 @@ enum class **enum\_type\_of\_compilation**{
 
 **object\_file,** //compile into object file
 
-**executable\_file,** //compile into executable file 
+**executable\_file,** //compile into executable file
 
 //all the facilities above are mandatory under the mandatory flag **BUILD\_SYSTEM\_AVALABILITY.**
 
@@ -187,7 +187,7 @@ enum class **enum\_type\_of\_compilation**{
 
 
 
-#### The enum\_optimization\_level (3.2.2)
+#### The parameter enum\_optimization\_level (3.2.2)
 
 enum\_optimization\_level is a paremeter of type unsigned long, that as it increases, the build system tries to optimize for performance at the expense of space as the value goes up.
 
@@ -195,7 +195,7 @@ The limit for enum\_optimization\_levefl is defined by the mandatory variable/ma
 
 
 
-#### The debug\_build\_types (3.2.3)
+#### The parameter debug\_build\_types (3.2.3)
 
 The Debug\_build\_types is of type std::initializer\_list<enum\_debug>.
 
@@ -260,7 +260,7 @@ bool is\_mem\_free(void \*ptr);
 
 
 
-#### The dependency\_tracking\_flags (3.2.4)
+#### The parameter dependency\_tracking\_flags (3.2.4)
 
 
 
@@ -270,19 +270,61 @@ enum class **enum\_show\_dependencies**{
 
 
 
-**print\_dependency\_file\_names,** // in the case of C++, if the file is a module (not a header file), then the filename would be printed as *filename*/*module\_name* , any potential "/" in either filename or module\_name would be turned into "//". For header files its just *filename. Filename* is to be the absolute path of the file in question. After each dependency getting printed, there has to be a newline.
+**print\_dependency\_file\_names\_modules,** // in the case of C++, prints modules that are imported by the file in the format: *filename*/*module\_name* , any potential "/" in either filename or module\_name would be turned into "//". For header files its just *filename. Filename* is to be the absolute path of the file in question. After each dependency getting printed, there has to be a newline.
 
 
 
-**print\_individual\_dependency\_mappings,** // The mapping of each symbol used to every *filename*. After print\_dependency\_file\_names prints a dependency, print\_individual\_dependency\_mappings prints the symbols used that are found in that dependency in a comma-separated list that is terminated by a newline. function dependencies have an escape character appended to there end and any possible "/" is escaped into "//". Such escaping will never happen unless a future standard allows for "/" to be in symbol names.
+**print\_individual\_dependency\_mappings\_header,**
 
-**throw\_circular\_dependency\_mappings\_for\_headers,** //only in effect if throw\_circular\_dependency\_mappings is defined.
+**print\_individual\_dependency\_mappings\_module,**
 
-**throw\_circular\_dependency\_mappings,** // The mapping of each symbol is checked for circular dependencies, it is defined as:
+//both **print\_individual\_dependency\_mappings\_header** and **print\_individual\_dependency\_mappings\_module** print (when the built file executable):
 
-an operation A for a symbol B depends on the operation B of a symbol C while the same operation B depends on operation A, and vice verse. Such dependency can be anything but namely: C++ initialization/assignment operation that gets messy due to poorly-designed user defined constructors/assignment operations. Such a flag will not check header files to see if such issues exist between header file included and the source file it is included in, unless throw\_circular\_dependency\_mappings\_for\_headers is defined.
+**throw\_circular\_dependency\_mappings\_for\_headers,**
 
-//all the facilities above are mandatory under the mandatory flag **BUILD\_SYSTEM\_AVALABILITY.**
+**throw\_circular\_dependency\_mappings\_for\_to\_be\_linked\_files,**
+
+/\*both **throw\_circular\_dependency\_mappings\_for\_headers** and **throw\_circular\_dependency\_mappings\_for\_to\_be\_linked\_files** are used to reports error prone circular dependencies when the built file executable is run, as defined below:
+
+an operation A for a symbol B depends on the operation D of a symbol C while the same operation D depends on operation A, and vice verse. Such problematic dependency can be anything but namely: C++ initialization/assignment operation that gets messy due to poorly-designed user defined constructors/assignment operations.
+
+
+
+**throw\_circular\_dependency\_mappings\_for\_to\_be\_linked\_files** applies only to the elements specified in the first parameter of multi\_file\_built
+
+\*/
+
+
+
+/\*
+
+**print\_individual\_dependency\_mappings\_header,print\_individual\_dependency\_mappings\_module,throw\_circular\_dependency\_mappings\_for\_headers,throw\_circular\_dependency\_mappings\_for\_to\_be\_linked\_files** print information as follows:
+
+filename:
+
+\[error\_prone\_dependency description]
+
+
+
+error\_prone\_dependency description is defined to have the format:
+
+Operation A, Symbol B, Operation D, symbol C
+
+\*/
+
+
+
+
+
+
+
+**throw\_circular\_dependency\_mappings\_with\_module\_names** // applies only when **throw\_circular\_dependency\_mappings\_for\_to\_be\_linked** is provided. When specified, it also prints the module name in as part of filename in the format: "filename/module\_name".
+
+**print\_individual\_dependency\_mappings\_with\_module\_names** // applies only when **print\_individual\_dependency\_mappings\_module** is provided. When specified, it also prints the module name in as part of filename in the format: "filename/module\_name".
+
+
+
+
 
 ***/\*Other implementation defined facilities indicated by additional enumerators\*/***
 
@@ -290,9 +332,9 @@ an operation A for a symbol B depends on the operation B of a symbol C while the
 
 #### 
 
-#### The append\_flags(3.2.5)
+#### The parameter append\_flags(3.2.5)
 
-The append\_flags is a parameter of type std::initializer\_list<Append\_compile\_runtime\_environment>. 
+The append\_flags is a parameter of type std::initializer\_list<Append\_compile\_runtime\_environment>.
 
 Append\_compile\_runtime\_environment is defined as:
 
@@ -304,7 +346,7 @@ enum class **Append\_compile\_runtime\_environment** {
 
 
 
-#### The impl\_defined\_flags(3.2.6)
+#### The parameter impl\_defined\_flags(3.2.6)
 
 The impl\_defined\_flags is a parameter of type std::initializer\_list<implementation\_defined\_compiler\_flags>. implementation\_defined\_compiler\_flags type enumerate implementation defined flags that a confirming implementation must document if provided.
 
@@ -313,6 +355,14 @@ The impl\_defined\_flags is a parameter of type std::initializer\_list<implement
 #### The Type Build\_file\_handle(3.2.6)
 
 Build\_file\_handle is a type meant to be used as a handle to compiled files that can further allow you to run implementation defined functions on them, or to further compile/link them into other kinds of files using standard functions that will be described further in this document.
+
+
+
+#### The function set(3.2.6)
+
+set function as shown by its declaration has the same interface as the constructor, and is to mutate the state of the object Build\_file\_config that it is called upon.
+
+
 
 
 
@@ -326,9 +376,43 @@ the availability of functions that any facility relies on, can be verified using
 
 
 
+Build\_file\_handle multi\_file\_built(std::initializer\_list<Build\_file\_config>, Optional\_parameters);
+
+The function multi\_file\_built constructs the entire target project as specified by Build\_file\_config. It requires the two preconditions that each Build\_file\_config is defined to compile can be produced as a result of linking the object files of all the files into a single file, and is either an object file or a file that is the result of compilation before the linkage process, such precondition can be checked at compile time (In C++ only) through a constexpr function called inside its body, the function will have a std::is\_constant\_evaluated if statement block, that if true will return, or else will return a value indicating error that must be used to return from multi\_file\_built function with a output indicating error.
+
+Optional\_parameters is a simple struct that mirrors Build\_file\_config. The only distinction between the two is that the each data member in Optional\_parameters is either considered to be ignored or not ignored. If it is ignored, it would indicate that the nothing happens with respect to that member, else the member replaces the value of all corresponding member in every object of the first parameter, that is Optional\_parameters is only relevant for the one function "multi\_file\_built", for replacing the values of members of all objects in the first paremeter with the ones specified as "not ignored". Optional\_parameters has the same interface as Build\_file\_config, though the representation may differ.
+
+struct Optional\_parameters {
+
+/\*implementation defined representation\*/
+
+Optional\_parameters(std::string path, enum\_type\_of\_compilation, unsigned long enum\_optimization\_level, std::initializer\_list<enum\_debug> debug\_build\_types,  std::initializer\_list<enum\_show\_dependencies> dependency\_tracking\_flags,
+
+std::initializer\_list<Append\_compile\_runtime\_environment> append\_flags,
+
+std::initializer\_list<implementation\_defined\_compiler\_flags> impl\_defined\_flags);
 
 
-### Other standard functions for further processing Build\_file\_handle (3.4)
+
+void set(enum\_type\_of\_compilation, unsigned long enum\_optimization\_level, std::initializer\_list<enum\_debug> debug\_build\_types,  std::initializer\_list<enum\_show\_dependencies> dependency\_tracking\_flags,
+
+std::initializer\_list<Append\_compile\_runtime\_environment> append\_flags,
+
+std::initializer\_list<implementation\_defined\_compiler\_flags> impl\_defined\_flags);
+
+
+
+};
+
+
+
+
+
+
+
+
+
+### 
 
 
 
